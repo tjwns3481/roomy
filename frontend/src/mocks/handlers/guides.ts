@@ -451,4 +451,68 @@ export const guideHandlers = [
     }
   }),
 
+  /**
+   * POST /api/guides/:id/unpublish - 안내서 발행 취소
+   * @TEST T4.1 - 안내서 발행 취소
+   */
+  http.post(`${API_BASE}/guides/:id/unpublish`, async ({ params }) => {
+    try {
+      const guideId = params.id as string;
+
+      const guide = guidesStore[guideId];
+      if (!guide) {
+        return HttpResponse.json(
+          {
+            error: {
+              code: 'NOT_FOUND',
+              message: '안내서를 찾을 수 없습니다',
+            },
+          },
+          { status: 404 }
+        );
+      }
+
+      const now = new Date();
+      const updatedGuide = {
+        ...guide,
+        slug: null,
+        isPublished: false,
+        updatedAt: now,
+      };
+
+      guidesStore[guideId] = updatedGuide;
+      guideListStore[guideId] = {
+        ...guideListStore[guideId],
+        slug: null,
+        isPublished: false,
+        updatedAt: now,
+      };
+
+      if (guidesWithBlocksStore[guideId]) {
+        guidesWithBlocksStore[guideId] = {
+          ...updatedGuide,
+          blocks: guidesWithBlocksStore[guideId].blocks,
+        };
+      }
+
+      return HttpResponse.json({
+        data: {
+          id: updatedGuide.id,
+          slug: updatedGuide.slug,
+          isPublished: updatedGuide.isPublished,
+        },
+      }, { status: 200 });
+    } catch (error) {
+      return HttpResponse.json(
+        {
+          error: {
+            code: 'INTERNAL_ERROR',
+            message: '안내서 발행 취소 중 오류가 발생했습니다',
+          },
+        },
+        { status: 500 }
+      );
+    }
+  }),
+
 ];

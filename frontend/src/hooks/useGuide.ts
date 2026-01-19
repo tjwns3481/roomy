@@ -90,6 +90,24 @@ async function deleteGuide(id: string): Promise<{ data: { deleted: boolean } }> 
   return handleResponse<{ data: { deleted: boolean } }>(response)
 }
 
+/**
+ * 공개 안내서 조회 API (slug 기반)
+ */
+async function fetchPublicGuide(slug: string): Promise<GetGuideResponse> {
+  const response = await fetch(`${API_BASE}/public/${slug}`)
+  return handleResponse<GetGuideResponse>(response)
+}
+
+/**
+ * 공개 안내서 조회수 증가 API
+ */
+async function incrementGuideView(slug: string): Promise<{ data: { success: boolean } }> {
+  const response = await fetch(`${API_BASE}/public/${slug}/view`, {
+    method: 'POST',
+  })
+  return handleResponse<{ data: { success: boolean } }>(response)
+}
+
 // ============================================================================
 // Query Keys
 // ============================================================================
@@ -100,6 +118,7 @@ export const guideKeys = {
   list: (query?: GuideListQuery) => [...guideKeys.lists(), query] as const,
   details: () => [...guideKeys.all, 'detail'] as const,
   detail: (id: string) => [...guideKeys.details(), id] as const,
+  public: (slug: string) => [...guideKeys.all, 'public', slug] as const,
 }
 
 // ============================================================================
@@ -263,4 +282,40 @@ export function useDeleteGuide() {
       queryClient.invalidateQueries({ queryKey: guideKeys.lists() })
     },
   })
+}
+
+/**
+ * 공개 안내서 조회 Hook (slug 기반)
+ *
+ * @param slug - 안내서 slug
+ * @returns 공개 안내서 쿼리 결과
+ *
+ * @example
+ * ```tsx
+ * function GuestPage({ slug }: { slug: string }) {
+ *   const { data, isLoading, isError } = usePublicGuide(slug)
+ *
+ *   if (isLoading) return <Spinner />
+ *   if (isError) return <NotFound />
+ *
+ *   return <GuideViewer guide={data?.data} />
+ * }
+ * ```
+ */
+export function usePublicGuide(slug: string) {
+  const { mutate: incrementView } = useMutation({
+    mutationFn: () => incrementGuideView(slug),
+  })
+
+  const query = useQuery({
+    queryKey: guideKeys.public(slug),
+    queryFn: async () => {
+      const data = await fetchPublicGuide(slug)
+      // 조회수 증가 (조회 성공 시 한 번만 실행)
+      incrementView()
+      return data
+    },
+  })
+
+  return query
 }
