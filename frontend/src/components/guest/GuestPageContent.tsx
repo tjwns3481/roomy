@@ -3,6 +3,7 @@
 
 'use client';
 
+import Image from 'next/image';
 import { usePublicGuide } from '@/hooks/useGuide';
 import { GuideWithBlocks } from '@/contracts';
 import { BlockRenderer } from './BlockRenderer';
@@ -55,11 +56,16 @@ export function GuestPageContent({ slug }: { slug: string }) {
           {/* 헤더 */}
           <header className="mb-8">
             {guide.coverImage && (
-              <img
-                src={guide.coverImage}
-                alt={guide.title}
-                className="w-full h-64 object-cover rounded-lg mb-6"
-              />
+              <div className="relative w-full h-64 mb-6">
+                <Image
+                  src={guide.coverImage}
+                  alt={guide.title}
+                  fill
+                  className="object-cover rounded-lg"
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 1024px"
+                  priority
+                />
+              </div>
             )}
             <h1 className="text-4xl font-bold mb-4">{guide.title}</h1>
             {guide.description && (

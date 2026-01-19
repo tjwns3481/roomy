@@ -3,6 +3,7 @@
 import { useQRCode } from '@/hooks/useQRCode';
 import { Button } from '@/components/ui/Button';
 import { useState } from 'react';
+import Image from 'next/image';
 
 export interface QRCodeGeneratorProps {
   url: string;
@@ -62,11 +63,14 @@ export function QRCodeGenerator({
           </div>
         ) : qrCodeDataUrl ? (
           <div className="rounded-lg border border-gray-200 bg-white p-4 shadow-sm">
-            <img
+            <Image
               src={qrCodeDataUrl}
               alt="QR Code"
+              width={size}
+              height={size}
               className="h-auto w-full"
               style={{ maxWidth: `${size}px` }}
+              unoptimized
             />
           </div>
         ) : null}

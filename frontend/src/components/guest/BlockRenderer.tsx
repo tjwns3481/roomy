@@ -3,6 +3,7 @@
 
 'use client';
 
+import Image from 'next/image';
 import { Block } from '@/contracts';
 import { CopyButton } from './CopyButton';
 
@@ -17,11 +18,16 @@ export function BlockRenderer({ block }: { block: Block }) {
       return (
         <div className="mb-8">
           {typeof content.imageUrl === 'string' && content.imageUrl && (
-            <img
-              src={content.imageUrl}
-              alt="Hero"
-              className="w-full h-64 object-cover rounded-lg mb-4"
-            />
+            <div className="relative w-full h-64 mb-4">
+              <Image
+                src={content.imageUrl}
+                alt="Hero"
+                fill
+                className="object-cover rounded-lg"
+                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 1024px"
+                priority
+              />
+            </div>
           )}
           {typeof content.title === 'string' && content.title && (
             <h2 className="text-3xl font-bold mb-2">{content.title}</h2>
@@ -92,11 +98,15 @@ export function BlockRenderer({ block }: { block: Block }) {
           <div className="grid grid-cols-3 gap-4">
             {images.map((img) => (
               <div key={img.id}>
-                <img
-                  src={img.url}
-                  alt={img.caption || 'Gallery image'}
-                  className="w-full h-48 object-cover rounded-lg"
-                />
+                <div className="relative w-full h-48">
+                  <Image
+                    src={img.url}
+                    alt={img.caption || 'Gallery image'}
+                    fill
+                    className="object-cover rounded-lg"
+                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 33vw, 300px"
+                  />
+                </div>
                 {img.caption && (
                   <div className="text-sm text-gray-600 mt-2">{img.caption}</div>
                 )}

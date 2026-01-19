@@ -4,6 +4,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import Image from 'next/image';
 import type { HeroContent } from '@/contracts';
 
 interface HeroEditorProps {
@@ -95,10 +96,12 @@ export function HeroEditor({ content, onUpdate }: HeroEditorProps) {
         <div className="mt-4">
           <p className="text-sm font-medium text-gray-700 mb-2">미리보기</p>
           <div className="relative h-48 rounded-md overflow-hidden bg-gray-100">
-            <img
+            <Image
               src={imageUrl}
               alt={title || '히어로 이미지'}
-              className="w-full h-full object-cover"
+              fill
+              className="object-cover"
+              sizes="(max-width: 768px) 100vw, 600px"
               onError={(e) => {
                 e.currentTarget.src = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="100" height="100"%3E%3Crect fill="%23ddd" width="100" height="100"/%3E%3C/svg%3E';
               }}

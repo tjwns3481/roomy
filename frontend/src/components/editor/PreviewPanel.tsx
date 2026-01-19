@@ -1,6 +1,7 @@
 'use client';
 
 import { useMemo } from 'react';
+import Image from 'next/image';
 import { useBlockStore } from '@/stores/blockStore';
 
 interface PreviewPanelProps {
@@ -40,11 +41,15 @@ export function PreviewPanel({ pageId }: PreviewPanelProps) {
                       <h3>{String(content.text || '')}</h3>
                     )}
                     {block.type === 'image' && typeof content.url === 'string' && (
-                      <img
-                        src={String(content.url)}
-                        alt={String(content.caption || '')}
-                        className="rounded-lg"
-                      />
+                      <div className="relative w-full aspect-video">
+                        <Image
+                          src={String(content.url)}
+                          alt={String(content.caption || '')}
+                          fill
+                          className="rounded-lg object-cover"
+                          sizes="(max-width: 768px) 100vw, 600px"
+                        />
+                      </div>
                     )}
                     {block.type === 'code' && (
                       <pre className="rounded-lg bg-gray-100 p-3">

@@ -1,0 +1,26 @@
+# Test files and directories
+**/__tests__/**
+**/*.test.ts
+**/*.test.tsx
+**/*.spec.ts
+**/*.spec.tsx
+/test-results/
+/playwright-report/
+/playwright/.cache/
+
+# Test configuration
+vitest.config.ts
+playwright.config.ts
+
+# Documentation
+*.md
+!README.md
+
+# Development files
+.env.local.example
+lint-output.txt
+test-output.txt
+
+# IDE
+.vscode/
+.idea/

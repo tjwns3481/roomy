@@ -1,8 +1,22 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import { EditorLayout } from '@/components/editor';
 import { useParams } from 'next/navigation';
+import dynamic from 'next/dynamic';
+
+const EditorLayout = dynamic(
+  () => import('@/components/editor').then((mod) => ({ default: mod.EditorLayout })),
+  {
+    loading: () => (
+      <div className="flex h-screen items-center justify-center">
+        <div className="text-center">
+          <div className="text-lg">에디터 로딩 중...</div>
+        </div>
+      </div>
+    ),
+    ssr: false,
+  }
+);
 
 export default function EditorPage() {
   const router = useRouter();

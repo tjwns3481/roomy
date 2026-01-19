@@ -4,6 +4,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import Image from 'next/image';
 import type { GalleryContent } from '@/contracts';
 
 interface GalleryEditorProps {
@@ -161,11 +162,13 @@ export function GalleryEditor({ content, onUpdate }: GalleryEditorProps) {
 
               {/* 미리보기 */}
               {image.url && (
-                <div className="mt-2">
-                  <img
+                <div className="mt-2 relative w-full h-32">
+                  <Image
                     src={image.url}
                     alt={image.caption || `이미지 ${index + 1}`}
-                    className="w-full h-32 object-cover rounded"
+                    fill
+                    className="object-cover rounded"
+                    sizes="(max-width: 768px) 100vw, 400px"
                     onError={(e) => {
                       e.currentTarget.src = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="100" height="100"%3E%3Crect fill="%23ddd" width="100" height="100"/%3E%3C/svg%3E';
                     }}
