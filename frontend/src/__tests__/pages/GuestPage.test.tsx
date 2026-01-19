@@ -12,7 +12,7 @@ vi.mock('@/hooks/useGuide', () => ({
 }))
 
 // Import the content component (not the page wrapper that uses use())
-import { GuestPageContent } from '@/app/g/[slug]/page'
+import { GuestPageContent } from '@/components/guest/GuestPageContent'
 
 /**
  * 테스트 래퍼 컴포넌트

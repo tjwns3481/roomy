@@ -141,13 +141,31 @@ export const useBlockStore = create<BlockState>((set) => ({
       const [removed] = blocks.splice(sourceIndex, 1)
       blocks.splice(destinationIndex, 0, removed)
 
-      // Update order values
+      // Only update order values for blocks that were actually moved or affected
+      // Get the pageId of the moved block
+      const movedPageId = removed.pageId
+      const minIndex = Math.min(sourceIndex, destinationIndex)
+      const maxIndex = Math.max(sourceIndex, destinationIndex)
+
       return {
-        blocks: blocks.map((block, index) => ({
-          ...block,
-          order: index,
-          updatedAt: new Date().toISOString(),
-        })),
+        blocks: blocks.map((block, index) => {
+          // Only update blocks that were affected by the move (same page and within range)
+          if (
+            block.pageId === movedPageId &&
+            index >= minIndex &&
+            index <= maxIndex
+          ) {
+            // Find the order value for this block within its page
+            const pageBlocks = blocks.filter((b) => b.pageId === movedPageId)
+            const pageIndex = pageBlocks.findIndex((b) => b.id === block.id)
+            return {
+              ...block,
+              order: pageIndex,
+              updatedAt: new Date().toISOString(),
+            }
+          }
+          return block
+        }),
       }
     }),
 

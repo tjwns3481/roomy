@@ -1,4 +1,4 @@
-// @TASK T1.3, T2.1, T2.2, T4.1 - Hooks 모듈 내보내기
+// @TASK T1.3, T2.1, T2.2, T2.5, T4.1 - Hooks 모듈 내보내기
 // @SPEC docs/planning/03-user-flow.md
 
 export { useUser, type UserInfo, type UserPlan, type UseUserReturn } from './useUser'
@@ -24,3 +24,12 @@ export {
   useCheckSlug,
   publishKeys,
 } from './usePublish'
+export {
+  useDragDrop,
+  DndContext,
+  closestCenter,
+  SortableContext,
+  verticalListSortingStrategy,
+} from './useDragDrop'
+export { useQRCode } from './useQRCode'
+export { useClipboard } from './useClipboard'
