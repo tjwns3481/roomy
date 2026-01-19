@@ -6,6 +6,35 @@ import { renderHook, act } from '@testing-library/react'
 import { useDragDrop } from '@/hooks/useDragDrop'
 import { useBlockStore } from '@/stores/blockStore'
 import type { EditorBlock } from '@/stores/blockStore'
+import type { DragEndEvent, DragStartEvent } from '@dnd-kit/core'
+
+// Helper to create mock DragEndEvent
+const createDragEndEvent = (activeId: string, overId: string | null): DragEndEvent => ({
+  active: {
+    id: activeId,
+    data: { current: undefined },
+    rect: { current: { initial: null, translated: null } },
+  },
+  over: overId ? {
+    id: overId,
+    rect: { width: 0, height: 0, top: 0, left: 0, bottom: 0, right: 0 },
+    disabled: false,
+    data: { current: undefined },
+  } : null,
+  activatorEvent: new MouseEvent('mousedown'),
+  collisions: [],
+  delta: { x: 0, y: 0 },
+})
+
+// Helper to create mock DragStartEvent
+const createDragStartEvent = (activeId: string): DragStartEvent => ({
+  active: {
+    id: activeId,
+    data: { current: undefined },
+    rect: { current: { initial: null, translated: null } },
+  },
+  activatorEvent: new MouseEvent('mousedown'),
+})
 
 // Mock blocks for testing
 const mockBlocks: EditorBlock[] = [
@@ -48,14 +77,10 @@ describe('useDragDrop', () => {
   describe('기본 드래그앤드롭 기능', () => {
     it('블록을 아래로 드래그하면 순서가 변경된다', () => {
       const { result } = renderHook(() => useDragDrop('page-1'))
-      const blocks = useBlockStore.getState().blocks
 
       // block-1을 block-3 위치로 이동 (0 -> 2)
       act(() => {
-        result.current.handleDragEnd({
-          active: { id: 'block-1' },
-          over: { id: 'block-3' },
-        })
+        result.current.handleDragEnd(createDragEndEvent('block-1', 'block-3'))
       })
 
       const updatedBlocks = useBlockStore.getState().blocks
@@ -74,10 +99,7 @@ describe('useDragDrop', () => {
 
       // block-3을 block-1 위치로 이동 (2 -> 0)
       act(() => {
-        result.current.handleDragEnd({
-          active: { id: 'block-3' },
-          over: { id: 'block-1' },
-        })
+        result.current.handleDragEnd(createDragEndEvent('block-3', 'block-1'))
       })
 
       const updatedBlocks = useBlockStore.getState().blocks
@@ -91,10 +113,7 @@ describe('useDragDrop', () => {
       const blocksBefore = useBlockStore.getState().blocks
 
       act(() => {
-        result.current.handleDragEnd({
-          active: { id: 'block-2' },
-          over: { id: 'block-2' },
-        })
+        result.current.handleDragEnd(createDragEndEvent('block-2', 'block-2'))
       })
 
       const blocksAfter = useBlockStore.getState().blocks
@@ -106,10 +125,7 @@ describe('useDragDrop', () => {
       const blocksBefore = useBlockStore.getState().blocks
 
       act(() => {
-        result.current.handleDragEnd({
-          active: { id: 'block-1' },
-          over: null,
-        })
+        result.current.handleDragEnd(createDragEndEvent('block-1', null))
       })
 
       const blocksAfter = useBlockStore.getState().blocks
@@ -122,9 +138,7 @@ describe('useDragDrop', () => {
       const { result } = renderHook(() => useDragDrop('page-1'))
 
       act(() => {
-        result.current.handleDragStart({
-          active: { id: 'block-1' },
-        })
+        result.current.handleDragStart(createDragStartEvent('block-1'))
       })
 
       expect(result.current.activeId).toBe('block-1')
@@ -134,17 +148,12 @@ describe('useDragDrop', () => {
       const { result } = renderHook(() => useDragDrop('page-1'))
 
       act(() => {
-        result.current.handleDragStart({
-          active: { id: 'block-1' },
-        })
+        result.current.handleDragStart(createDragStartEvent('block-1'))
       })
       expect(result.current.activeId).toBe('block-1')
 
       act(() => {
-        result.current.handleDragEnd({
-          active: { id: 'block-1' },
-          over: { id: 'block-2' },
-        })
+        result.current.handleDragEnd(createDragEndEvent('block-1', 'block-2'))
       })
 
       expect(result.current.activeId).toBe(null)
@@ -154,9 +163,7 @@ describe('useDragDrop', () => {
       const { result } = renderHook(() => useDragDrop('page-1'))
 
       act(() => {
-        result.current.handleDragStart({
-          active: { id: 'block-1' },
-        })
+        result.current.handleDragStart(createDragStartEvent('block-1'))
       })
       expect(result.current.activeId).toBe('block-1')
 
@@ -184,10 +191,7 @@ describe('useDragDrop', () => {
       const { result } = renderHook(() => useDragDrop('page-1'))
 
       act(() => {
-        result.current.handleDragEnd({
-          active: { id: 'block-1' },
-          over: { id: 'block-3' },
-        })
+        result.current.handleDragEnd(createDragEndEvent('block-1', 'block-3'))
       })
 
       const allBlocks = useBlockStore.getState().blocks
@@ -239,10 +243,7 @@ describe('useDragDrop', () => {
       const blocksBefore = useBlockStore.getState().blocks
 
       act(() => {
-        result.current.handleDragEnd({
-          active: { id: 'non-existent-block' },
-          over: { id: 'block-1' },
-        })
+        result.current.handleDragEnd(createDragEndEvent('non-existent-block', 'block-1'))
       })
 
       const blocksAfter = useBlockStore.getState().blocks

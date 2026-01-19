@@ -33,3 +33,4 @@ export {
 } from './useDragDrop'
 export { useQRCode } from './useQRCode'
 export { useClipboard } from './useClipboard'
+export { useAutoSave, type AutoSaveStatus } from './useAutoSave'
