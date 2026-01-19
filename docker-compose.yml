@@ -1,0 +1,27 @@
+# Roomy - Local Development Environment
+# 프로덕션에서는 Supabase를 사용합니다
+
+version: '3.8'
+
+services:
+  # 로컬 개발용 PostgreSQL (Supabase 대체)
+  postgres:
+    image: postgres:16-alpine
+    container_name: roomy-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: roomy
+      POSTGRES_PASSWORD: roomy_dev_password
+      POSTGRES_DB: roomy
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U roomy"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  postgres_data:
