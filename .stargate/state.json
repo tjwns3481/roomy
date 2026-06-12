@@ -1,0 +1,22 @@
+{
+  "version": 1,
+  "started_at": "2026-06-11T00:00:00Z",
+  "updated_at": "2026-06-11T02:00:00Z",
+  "idea_prompt": "Roomy — 감성 디자인 템플릿을 고객이 직접 커스텀 → 구매 → URL 공유하는 모바일 페이지 SaaS (모바일 청첩장 + 모바일 객실 안내서)",
+  "planning_line": "socrates",
+  "current_phase": "3",
+  "completed_phases": [
+    "0",
+    "1",
+    "2"
+  ],
+  "artifacts": {
+    "planning_docs": "docs/planning/",
+    "screen_spec": null,
+    "tasks": null,
+    "planning_loop": null,
+    "derived_gates": null,
+    "build_mode": null
+  },
+  "notes": "기획 핵심: 완성형 프로덕트 지향(얇은 MVP 거부), 1순위 가치 = 감성+디자인+Toss급 인터랙션. 스택: Next.js+Framer Motion+Supabase, 결제 모크. Won't: 예약연동 자동발송, 자유편집 에디터. 정책: 비로그인 편집→결제 시 가입, 전체 미리보기+공유만 잠금, URL 1년+연장. | council 리뷰(평균 4.17) 전체 반영 완료: page_secrets 분리, on-demand revalidation, 토스 결제 모델, 익명인증 draft 이관, 갤러리 P0 승격(BGM 제외), 버티컬 차등 계좌 보호."
+}
